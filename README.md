@@ -61,6 +61,7 @@ new FancyShowCaseView.Builder(this)
 
 | Command | Description |
 | --- | --- |
+| `root` | Custom viewgroup (can be used for dialogs) |
 | `focusOn` | The view to be focused. |
 | `title` | The title text to be displayed.  |
 | `typeface` | The custom typeface for the title text. |
