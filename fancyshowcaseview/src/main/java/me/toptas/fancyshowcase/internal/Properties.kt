@@ -11,6 +11,7 @@ import me.toptas.fancyshowcase.listener.OnQueueListener
 import me.toptas.fancyshowcase.listener.OnViewInflateListener
 
 internal data class Properties(
+        var root: ViewGroup? = null,
         var title: String? = null,
         var fancyId: String? = null,
         var focusCircleRadiusFactor: Double = 1.0,

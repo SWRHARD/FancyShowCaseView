@@ -122,7 +122,11 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
 
     private fun focus() {
         presenter.calculations()
-        mRoot = activity.rootView()
+
+        mRoot = if (props.root == null) {
+            activity.rootView()
+        } else props.root
+
         mRoot?.postDelayed(Runnable {
             if (activity.isFinishing) {
                 return@Runnable
@@ -342,6 +346,14 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
     class Builder(private val activity: Activity) {
         private val props = Properties()
         private val androidProps = AndroidProperties()
+
+        /**
+         * @param root
+         * Set custom root
+         */
+        fun root(root: ViewGroup) {
+            props.root = root
+        }
 
         /**
          * @param title title text
