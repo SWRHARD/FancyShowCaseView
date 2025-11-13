@@ -201,6 +201,10 @@ class FancyShowCaseView @JvmOverloads constructor(context: Context, attrs: Attri
         )
     }
 
+    fun setFancyId(fancyId: String) {
+        props.fancyId = fancyId
+    }
+
     /**
      * Hides FancyShowCaseView with animation
      */
