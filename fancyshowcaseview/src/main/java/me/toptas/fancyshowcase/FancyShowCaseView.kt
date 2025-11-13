@@ -125,6 +125,7 @@ class FancyShowCaseView @JvmOverloads constructor(
      * Shows FancyShowCaseView
      */
     fun show() {
+        visibility = INVISIBLE
         presenter.show { focus() }
     }
 
@@ -149,7 +150,6 @@ class FancyShowCaseView @JvmOverloads constructor(
                     LayoutParams.MATCH_PARENT
                 )
 
-                visibility = INVISIBLE
                 mRoot?.addView(this)
 
                 viewTreeObserver.addOnGlobalLayoutListener(object :
@@ -164,6 +164,8 @@ class FancyShowCaseView @JvmOverloads constructor(
 
                 setupTouchListener()
                 setCalculatorParams()
+
+                removeAllViews()
                 addView(FancyImageView.instance(activity, props, presenter))
                 inflateContent()
                 writeShown()
@@ -258,6 +260,7 @@ class FancyShowCaseView @JvmOverloads constructor(
         viewInflateListener: OnViewInflateListener?
     ) {
         activity.layoutInflater.inflate(layout, this, false)?.apply {
+            removeView(this)
             addView(this)
             viewInflateListener?.onViewInflated(this)
         }
