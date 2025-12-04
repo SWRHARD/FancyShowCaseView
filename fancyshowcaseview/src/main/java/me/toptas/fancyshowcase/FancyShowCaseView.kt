@@ -29,14 +29,19 @@ import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.view.WindowInsets
 import android.view.animation.Animation
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.annotation.LayoutRes
+import androidx.annotation.Px
 import androidx.annotation.RequiresApi
 import androidx.annotation.StyleRes
+import androidx.core.view.ViewCompat
+import androidx.core.view.updatePadding
+import androidx.core.view.WindowInsetsCompat
 import me.toptas.fancyshowcase.ext.AnimationEndListener
 import me.toptas.fancyshowcase.ext.attachedShowCase
 import me.toptas.fancyshowcase.ext.circularEnterAnimation
@@ -59,6 +64,7 @@ import me.toptas.fancyshowcase.listener.DismissListener
 import me.toptas.fancyshowcase.listener.OnQueueListener
 import me.toptas.fancyshowcase.listener.OnViewInflateListener
 import kotlin.math.hypot
+import kotlin.math.max
 
 /**
  * FancyShowCaseView class
@@ -131,7 +137,19 @@ class FancyShowCaseView @JvmOverloads constructor(
     private fun focus() {
         mRoot = props.root ?: activity.rootView()
 
-        mRoot?.postDelayed(Runnable {
+        mRoot?.apply {
+            ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
+                val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+                val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                v.setPadding(
+                    0,
+                    sysBars.top,
+                    0,
+                    max(ime.bottom, sysBars.bottom)
+                )
+                insets
+            }
+        }?.postDelayed(Runnable {
             if (activity.isFinishing) return@Runnable
 
             val visibleView = activity.attachedShowCase()
@@ -178,7 +196,6 @@ class FancyShowCaseView @JvmOverloads constructor(
         }
         presenter.setFocusPositions()
     }
-
 
     private fun inflateContent() {
         if (props.customViewRes == 0) {
