@@ -34,6 +34,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.annotation.LayoutRes
+import androidx.annotation.Px
 import androidx.annotation.RequiresApi
 import androidx.annotation.StyleRes
 import androidx.core.view.ViewCompat
@@ -140,7 +141,6 @@ class FancyShowCaseView @JvmOverloads constructor(
 
             if (visibleView == null) {
                 mRoot?.findViewWithTag<FrameLayout>(CONTAINER_TAG)?.let {
-                    mRoot?.setPadding(0, 300, 0, 0)
                     mRoot?.removeView(it)
                 }
 
@@ -164,13 +164,26 @@ class FancyShowCaseView @JvmOverloads constructor(
                         setCalculatorParams()
 
                         removeAllViews()
-                        addView(FancyImageView.instance(activity, props, presenter))
+                        addView(FancyImageView.instance(activity, props, presenter).apply {
+                            applyWindowInsets()
+                        })
                         inflateContent()
                         writeShown()
                     }
                 })
             }
         }, props.delay)
+    }
+
+    fun View.applyWindowInsets(@Px bottomPadding: Int? = null) {
+        ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(
+                0, sysBars.top, 0, bottomPadding ?: max(ime.bottom, sysBars.bottom)
+            )
+            insets
+        }
     }
 
     private fun setCalculatorParams() {
