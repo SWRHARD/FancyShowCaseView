@@ -132,20 +132,7 @@ class FancyShowCaseView @JvmOverloads constructor(
 
     private fun focus() {
         mRoot = props.root ?: activity.rootView()
-
-        mRoot?.apply {
-            ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
-                val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
-                val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                v.setPadding(
-                    0,
-                    sysBars.top,
-                    0,
-                    max(ime.bottom, sysBars.bottom)
-                )
-                insets
-            }
-        }?.postDelayed(Runnable {
+        mRoot?.postDelayed(Runnable {
             if (activity.isFinishing) return@Runnable
 
             val visibleView = activity.attachedShowCase()
@@ -153,6 +140,7 @@ class FancyShowCaseView @JvmOverloads constructor(
 
             if (visibleView == null) {
                 mRoot?.findViewWithTag<FrameLayout>(CONTAINER_TAG)?.let {
+                    mRoot?.setPadding(0, 300, 0, 0)
                     mRoot?.removeView(it)
                 }
 
